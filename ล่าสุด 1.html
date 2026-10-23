@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan Travel Guide - คู่มือท่องเที่ยวญี่ปุ่น</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sakura: {
+                            50: '#FFF5F8',
+                            100: '#FCE7F0',
+                            200: '#F8C3D9',
+                            300: '#F48FB1',
+                            400: '#F06292',
+                            500: '#EC4899',
+                            600: '#DB2777',
+                            700: '#BE185D',
+                        },
+                        lavender: {
+                            50: '#F4F0FF',
+                            100: '#EAE6FF',
+                            200: '#D8CEFF',
+                            300: '#B8A6FF',
+                            400: '#987BFF',
+                            500: '#A855F7',
+                            600: '#7F56D9',
+                            700: '#6B21A8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #FFF8FA;
+            --bg-card: #FFFFFF;
+            --text-dark: #3B2A3A;
+            --border-light: #FCE7F0;
+        }
+
+        body {
+            font-family: 'Kanit', 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(252, 231, 240, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(234, 230, 255, 0.6) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        canvas#sakuraCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 40;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(252, 231, 240, 0.9);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF5F8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D8CEFF;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F48FB1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Sakura Canvas Overlay -->
+    <canvas id="sakuraCanvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-30 glass-panel shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-sakura-500 to-lavender-600 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-sakura-200">
+                    桜
+                </div>
+                <div>
+                    <span class="text-lg font-bold bg-gradient-to-r from-sakura-600 to-lavender-700 bg-clip-text text-transparent">Japan Travel Guide</span>
+                    <span class="text-xs text-slate-500 block -mt-1">คู่มือเที่ยวญี่ปุ่นฉบับสมบูรณ์</span>
+                </div>
+            </div>
+
+            <!-- JST Clock & Controls -->
+            <div class="flex items-center space-x-3 md:space-x-6">
+                <!-- Live Clock -->
+                <div class="hidden sm:flex items-center space-x-2 bg-sakura-50/80 px-3 py-1.5 rounded-full border border-sakura-100 text-xs text-slate-700">
+                    <i class="fa-regular font-bold fa-clock text-sakura-500"></i>
+                    <span>เวลาโตเกียว (JST):</span>
+                    <span id="jstClock" class="font-mono font-semibold text-lavender-700">--:--:--</span>
+                </div>
+
+                <!-- Sakura Toggle Button -->
+                <button id="sakuraBtn" onclick="toggleSakura()" title="เปิด/ปิดซากุระร่วง" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-sakura-100 text-sakura-700 hover:bg-sakura-200">
+                    <i class="fa-solid fa-seedling"></i>
+                    <span class="hidden md:inline">ซากุระ</span>
+                    <span id="sakuraStatus" class="font-semibold text-[10px] bg-sakura-500 text-white px-1.5 py-0.5 rounded-full">เปิด</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+        <!-- Hero Section -->
+        <section class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-lavender-700 via-sakura-600 to-lavender-600 text-white p-8 md:p-12 shadow-xl">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=1600')] bg-cover bg-center opacity-20"></div>
+            <div class="relative z-10 max-w-2xl space-y-4">
+                <span class="inline-block px-3.5 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-medium tracking-wide border border-white/30">
+                    🌸 Comprehensive Japan Travel Hub
+                </span>
+                <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
+                    วางแผนเที่ยวญี่ปุ่น <br><span class="text-sakura-200">ละมุนทุกจุดหมายกับธีมซากุระ</span>
+                </h1>
+                <p class="text-sakura-100 text-sm md:text-base leading-relaxed">
+                    รวมข้อมูล 15 เมืองยอดฮิต พร้อม 11 ย่านเด็ดในโตเกียว เครื่องคำนวณเงินเยน และระบบวางแผนทริปอัตโนมัติครบจบในที่เดียว
+                </p>
+
+                <!-- Search Bar -->
+                <div class="pt-2 relative">
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400"></i>
+                        <input type="text" id="searchInput" oninput="handleSearch()" placeholder="ค้นหาเมือง ย่าน หรือสถานที่ท่องเที่ยว (เช่น Shibuya, Kyoto, วัดเซ็นโซจิ)..." class="w-full pl-11 pr-4 py-3 rounded-2xl bg-white/95 text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sakura-400 shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-sakura-200 space-x-2 overflow-x-auto hide-scrollbar text-sm font-medium">
+            <button onclick="switchTab('cities')" id="tab-cities" class="tab-btn px-5 py-3 border-b-2 border-sakura-500 text-sakura-600 font-semibold whitespace-nowrap">
+                <i class="fa-solid fa-city mr-2"></i>15 เมือง & ย่านโตเกียว
+            </button>
+            <button onclick="switchTab('planner')" id="tab-planner" class="tab-btn px-5 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap">
+                <i class="fa-solid fa-route mr-2"></i>วางแผนการเดินทาง
+            </button>
+            <button onclick="switchTab('currency')" id="tab-currency" class="tab-btn px-5 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap">
+                <i class="fa-solid fa-calculator mr-2"></i>คำนวณเงิน THB/JPY
+            </button>
+        </div>
+
+        <!-- TAB 1: CITIES & DISTRICTS -->
+        <section id="view-cities" class="space-y-6">
+            <!-- Region Filter -->
+            <div class="flex items-center space-x-2 overflow-x-auto hide-scrollbar py-1">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap mr-2">ภูมิภาค:</span>
+                <button onclick="filterRegion('all', event)" class="region-filter active-region px-4 py-1.5 rounded-full text-xs font-medium bg-lavender-700 text-white shadow-sm transition-all">ทั้งหมด</button>
+                <button onclick="filterRegion('kanto', event)" class="region-filter px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-sakura-100 hover:bg-sakura-50 transition-all">คันโต (Kanto)</button>
+                <button onclick="filterRegion('kansai', event)" class="region-filter px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-sakura-100 hover:bg-sakura-50 transition-all">คันไซ (Kansai)</button>
+                <button onclick="filterRegion('hokkaido', event)" class="region-filter px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-sakura-100 hover:bg-sakura-50 transition-all">ฮอกไกโด (Hokkaido)</button>
+                <button onclick="filterRegion('kyushu', event)" class="region-filter px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-sakura-100 hover:bg-sakura-50 transition-all">คิวชู (Kyushu)</button>
+                <button onclick="filterRegion('chubu', event)" class="region-filter px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-sakura-100 hover:bg-sakura-50 transition-all">ชูบุ (Chubu)</button>
+                <button onclick="filterRegion('okinawa', event)" class="region-filter px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-sakura-100 hover:bg-sakura-50 transition-all">โอกินาวา (Okinawa)</button>
+            </div>
+
+            <!-- City Grid -->
+            <div id="cityGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic City Cards loaded by JavaScript -->
+            </div>
+        </section>
+
+        <!-- TAB 2: TRIP PLANNER -->
+        <section id="view-planner" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-sakura-100">
+                <h2 class="text-xl font-bold text-slate-800 mb-2">จัดทริปเที่ยวญี่ปุ่นอัตโนมัติ</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mb-6">เลือกจำนวนวันที่ต้องการเดินทางเพื่อรับแผนการท่องเที่ยว พร้อมค่าใช้จ่ายประมาณการ บัตรโดยสารแนะนำ และแผนรายวัน</p>
+
+                <!-- Duration Selector -->
+                <div class="grid grid-cols-3 gap-3 sm:gap-4 mb-8 max-w-md">
+                    <button onclick="selectPlanDuration(3)" id="planBtn-3" class="plan-duration-btn active-duration p-4 rounded-2xl border-2 border-sakura-500 bg-sakura-50 text-center transition-all">
+                        <span class="block text-xl sm:text-2xl font-bold text-sakura-600">3 วัน</span>
+                        <span class="text-[11px] text-slate-500">ทริปสั้น / โตเกียว</span>
+                    </button>
+                    <button onclick="selectPlanDuration(5)" id="planBtn-5" class="plan-duration-btn p-4 rounded-2xl border-2 border-slate-200 hover:border-sakura-200 text-center transition-all">
+                        <span class="block text-xl sm:text-2xl font-bold text-slate-700">5 วัน</span>
+                        <span class="text-[11px] text-slate-500">โตเกียว & ฟูจิ</span>
+                    </button>
+                    <button onclick="selectPlanDuration(7)" id="planBtn-7" class="plan-duration-btn p-4 rounded-2xl border-2 border-slate-200 hover:border-sakura-200 text-center transition-all">
+                        <span class="block text-xl sm:text-2xl font-bold text-slate-700">7 วัน</span>
+                        <span class="text-[11px] text-slate-500">คันไซสุดคุ้ม</span>
+                    </button>
+                </div>
+
+                <!-- Plan Content Output -->
+                <div id="planOutput" class="space-y-6">
+                    <!-- Dynamic itinerary generated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: CURRENCY CALCULATOR -->
+        <section id="view-currency" class="hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Calculator Card -->
+                <div class="lg:col-span-2 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-sakura-100 space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-4 border-sakura-50 gap-2">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">เครื่องคำนวณอัตราแลกเปลี่ยน</h2>
+                            <p class="text-xs text-slate-400">คำนวณเปรียบเทียบ THB (บาท) และ JPY (เยน)</p>
+                        </div>
+                        <span class="text-xs bg-lavender-50 text-lavender-700 border border-lavender-200 px-3 py-1 rounded-full w-fit">อัตราอ้างอิง: 100 JPY ≈ 24.5 THB</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <!-- JPY Input -->
+                        <div class="bg-sakura-50/60 border border-sakura-200 p-4 rounded-2xl space-y-2">
+                            <label class="text-xs font-semibold text-sakura-700 uppercase tracking-wide">จำนวนเงินเยน (JPY ¥)</label>
+                            <div class="relative">
+                                <input type="number" id="jpyInput" oninput="convertCurrency('jpy')" placeholder="0" value="1000" class="w-full text-2xl font-bold text-slate-800 bg-transparent focus:outline-none">
+                                <span class="absolute right-0 top-1 text-slate-400 text-sm">JPY</span>
+                            </div>
+                        </div>
+
+                        <!-- THB Input -->
+                        <div class="bg-lavender-50/60 border border-lavender-200 p-4 rounded-2xl space-y-2">
+                            <label class="text-xs font-semibold text-lavender-700 uppercase tracking-wide">คิดเป็นเงินบาท (THB ฿)</label>
+                            <div class="relative">
+                                <input type="number" id="thbInput" oninput="convertCurrency('thb')" placeholder="0" class="w-full text-2xl font-bold text-slate-800 bg-transparent focus:outline-none">
+                                <span class="absolute right-0 top-1 text-slate-400 text-sm">THB</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Rate Adjuster -->
+                    <div class="pt-2 flex items-center justify-between text-xs text-slate-500 border-t border-slate-100">
+                        <span>กำหนดเรทแลกเปลี่ยนเอง (บาท ต่อ 1 เยน):</span>
+                        <input type="number" id="customRate" value="0.245" step="0.001" onchange="convertCurrency('jpy')" class="w-24 text-right px-2 py-1 border border-sakura-200 rounded-lg font-mono text-slate-700 focus:outline-none focus:ring-1 focus:ring-sakura-400">
+                    </div>
+                </div>
+
+                <!-- Quick Reference Table -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-sakura-100 space-y-4">
+                    <h3 class="text-base font-bold text-slate-800">ตารางเทียบราคารวดเร็ว</h3>
+                    <div class="overflow-hidden rounded-2xl border border-sakura-100">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-sakura-50/70 text-slate-600 font-semibold border-b border-sakura-100">
+                                <tr>
+                                    <th class="p-3">เงินเยน (JPY)</th>
+                                    <th class="p-3">เงินบาท (THB)</th>
+                                    <th class="p-3">ตัวอย่างสินค้า</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quickTableBody" class="divide-y divide-sakura-50 font-medium text-slate-700">
+                                <!-- Dynamic table content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-sakura-100">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-9 h-9 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-slate-600 shadow-md transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-sakura-100 py-6 mt-12 text-center text-xs text-slate-400">
+        <p>© 2026 Japan Travel Guide. คู่มือท่องเที่ยวญี่ปุ่นธีมซากุระพาสเทล</p>
+    </footer>
+
+    <!-- JavaScript Application Data & Logic -->
+    <script>
+        // Image Fallback Handler
+        function handleImgError(img) {
+            img.onerror = null;
+            img.src = 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=800';
+        }
+
+        // --- 1. SAKURA PETAL ANIMATION SYSTEM ---
+        const canvas = document.getElementById('sakuraCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const petalCount = 11;
+        const petals = [];
+        let sakuraActive = true;
+
+        class Petal {
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(initial = false) {
+                this.x = Math.random() * width;
+                this.y = initial ? Math.random() * height : -20;
+                this.size = Math.random() * 6 + 5;
+                this.ySpeed = Math.random() * 0.25 + 0.15;
+                this.xSpeed = Math.random() * 0.2 - 0.1;
+                this.oscillation = Math.random() * Math.PI * 2;
+                this.oscillationSpeed = Math.random() * 0.008 + 0.003;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.006;
+                this.opacity = Math.random() * 0.4 + 0.35;
+            }
+
+            update() {
+                this.y += this.ySpeed;
+                this.oscillation += this.oscillationSpeed;
+                this.x += Math.sin(this.oscillation) * 0.25 + this.xSpeed;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > height + 20 || this.x < -20 || this.x > width + 20) {
+                    this.reset(false);
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = this.opacity;
+                
+                ctx.beginPath();
+                ctx.fillStyle = '#fbcfe8';
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-this.size / 2, -this.size / 2, -this.size, this.size / 3, 0, this.size);
+                ctx.bezierCurveTo(this.size, this.size / 3, this.size / 2, -this.size / 2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < petalCount; i++) {
+            petals.push(new Petal());
+        }
+
+        function animateSakura() {
+            ctx.clearRect(0, 0, width, height);
+            if (sakuraActive) {
+                petals.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+            }
+            requestAnimationFrame(animateSakura);
+        }
+        animateSakura();
+
+        function toggleSakura() {
+            sakuraActive = !sakuraActive;
+            const btn = document.getElementById('sakuraBtn');
+            const status = document.getElementById('sakuraStatus');
+            if (sakuraActive) {
+                btn.className = "flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-sakura-100 text-sakura-700 hover:bg-sakura-200";
+                status.textContent = "เปิด";
+                status.className = "font-semibold text-[10px] bg-sakura-500 text-white px-1.5 py-0.5 rounded-full";
+            } else {
+                btn.className = "flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all bg-slate-200 text-slate-600 hover:bg-slate-300";
+                status.textContent = "ปิด";
+                status.className = "font-semibold text-[10px] bg-slate-400 text-white px-1.5 py-0.5 rounded-full";
+            }
+        }
+
+        // --- 2. JST LIVE CLOCK ---
+        function updateJSTClock() {
+            const now = new Date();
+            const jstTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+            const hours = String(jstTime.getHours()).padStart(2, '0');
+            const minutes = String(jstTime.getMinutes()).padStart(2, '0');
+            const seconds = String(jstTime.getSeconds()).padStart(2, '0');
+            document.getElementById('jstClock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateJSTClock, 1000);
+        updateJSTClock();
+
+        // --- 3. DESTINATIONS & ATTRACTIONS DATA (15 Cities) ---
+        const destinations = [
+            {
+                id: 'tokyo',
+                name: 'โตเกียว (Tokyo)',
+                region: 'kanto',
+                temp: '18°C',
+                weather: 'แจ่มใส ☀️',
+                image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=800',
+                desc: 'มหานครสุดทันสมัยผสมผสานวัฒนธรรมดั้งเดิมและย่านแฟชั่นระดับโลก',
+                districts: [
+                    { name: 'ชิบูย่า (Shibuya)', highlight: 'ห้าแยกชิบูย่า & อนุสาวรีย์ฮาจิโกะ' },
+                    { name: 'ชินจูกุ (Shinjuku)', highlight: 'ย่านตึกระฟ้า สถานีรถไฟหลัก & Kabukicho' },
+                    { name: 'อาซากุสะ (Asakusa)', highlight: 'วัดเซ็นโซจิ (วัดโคมแดง) & ถนนนากามิเสะ' },
+                    { name: 'กินซ่า (Ginza)', highlight: 'ย่านช้อปปิ้งแบรนด์เนมหรูหรา' },
+                    { name: 'อากิฮาบาระ (Akihabara)', highlight: 'เมืองแห่งอนิเมะ เกม และอุปกรณ์อิเล็กทรอนิกส์' },
+                    { name: 'ฮาราจูกุ (Harajuku)', highlight: 'ถนนทาเคชิตะ แฟชั่นสตรีท & ศาลเจ้าเมจิ' },
+                    { name: 'อุเอโนะ (Ueno)', highlight: 'สวนอุเอโนะ ตลาดอาเมโยโกะ & พิพิธภัณฑ์' },
+                    { name: 'โอไดบะ (Odaiba)', highlight: 'เกาะเทคโนโลยี หุ่นยนต์กันดั้ม & วิวอ่าวโตเกียว' },
+                    { name: 'รปปงงิ (Roppongi)', highlight: 'จุดชมวิว Roppongi Hills & ไนท์ไลฟ์' },
+                    { name: 'อิเคบุคุโระ (Ikebukuro)', highlight: 'Sunshine City & แหล่งรวมป๊อปคัลเจอร์' },
+                    { name: 'นากาเมกุโระ (Nakameguro)', highlight: 'จุดชมดอกซากุระริมแม่น้ำ & คาเฟ่สุดชิค' }
+                ],
+                attractions: [
+                    {
+                        name: 'วัดเซ็นโซจิ (Sensoji Temple)',
+                        fee: 'เข้าฟรี',
+                        hours: '06:00 - 17:00 น.',
+                        transport: 'สถานี Asakusa (G19/A18) ทางออก 1 เดิน 5 นาที',
+                        tip: 'ควรไปช่วงเช้าตรู่เพื่อถ่ายรูปโคมแดงแบบคนน้อย'
+                    },
+                    {
+                        name: 'Shibuya Sky (จุดชมวิวชิบูย่า)',
+                        fee: '2,200 JPY',
+                        hours: '10:00 - 22:30 น.',
+                        transport: 'เชื่อมต่อตรงกับสถานี Shibuya (ตึก Shibuya Scramble Square)',
+                        tip: 'จองตั๋วล่วงหน้าออนไลน์อย่างน้อย 2 สัปดาห์สำหรับรอบพระอาทิตย์ตก'
+                    }
+                ]
+            },
+            {
+                id: 'kyoto',
+                name: 'เกียวโต (Kyoto)',
+                region: 'kansai',
+                temp: '17°C',
+                weather: 'มีเมฆบางส่วน ⛅',
+                image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=800',
+                desc: 'เมืองหลวงเก่าแก่อันเงียบสงบ ศูนย์รวมวัด ศาลเจ้า และวัฒนธรรมเกอิชา',
+                attractions: [
+                    {
+                        name: 'ศาลเจ้าฟูชิมิ อินาริ (Fushimi Inari)',
+                        fee: 'เข้าฟรี',
+                        hours: 'เปิด 24 ชั่วโมง',
+                        transport: 'สถานี JR Inari เดินออกประตูหน้าศาลเจ้าทันที',
+                        tip: 'เดินเลยจุดถ่ายรูปแรกขึ้นไปบนเขาเพื่อเลี่ยงความแออัด'
+                    },
+                    {
+                        name: 'วัดคิโยมิซุเดระ (วัดน้ำใส)',
+                        fee: '400 JPY',
+                        hours: '06:00 - 18:00 น.',
+                        transport: 'นั่งรถบัสจากสถานี Kyoto สาย 206 ลงป้าย Gojo-zaka เดิน 10 นาที',
+                        tip: 'เดินลัดเลาะย่านเก่าวินเทจ Sannenzaka และ Ninenzaka'
+                    }
+                ]
+            },
+            {
+                id: 'osaka',
+                name: 'โอซาก้า (Osaka)',
+                region: 'kansai',
+                temp: '19°C',
+                weather: 'แดดจัด ☀️',
+                image: 'https://images.unsplash.com/photo-1590559899731-a382839e5549?q=80&w=800',
+                desc: 'ครัวแห่งญี่ปุ่น โดดเด่นด้วยสตรีทฟู้ด ย่านโดทงโบริ และปราสาทโอซาก้า',
+                attractions: [
+                    {
+                        name: 'ปราสาทโอซาก้า (Osaka Castle)',
+                        fee: '600 JPY',
+                        hours: '09:00 - 17:00 น.',
+                        transport: 'สถานี Osakajokoen หรือ Tanimachi 4-chome เดิน 10 นาที',
+                        tip: 'ซื้อตั๋วเข้าหอคอยปราสาทผ่านช่องทางออนไลน์เพื่อข้ามแถว'
+                    },
+                    {
+                        name: 'ย่านโดทงโบริ (Dotonbori)',
+                        fee: 'เข้าชมฟรี',
+                        hours: 'เปิดตลอดเวลา (ร้านค้าเปิดราว 11:00-22:00)',
+                        transport: 'สถานี Namba ทางออก 14 เดิน 3 นาที',
+                        tip: 'ถ่ายรูปคู่ป้ายปูยักษ์และป้ายกูลิโกะช่วงเปิดไฟตอนค่ำ'
+                    }
+                ]
+            },
+            {
+                id: 'sapporo',
+                name: 'ซัปโปโร (Sapporo)',
+                region: 'hokkaido',
+                temp: '11°C',
+                weather: 'เย็นสบาย 🍃',
+                image: 'https://images.unsplash.com/photo-1578637387939-43c525550085?q=80&w=800',
+                desc: 'เมืองเอกแห่งเกาะฮอกไกโด ลิ้มรสราเมงมิโซะ อาหารทะเลสด และเทศกาลหิมะ',
+                attractions: [
+                    {
+                        name: 'สวนโอโดริ (Odori Park)',
+                        fee: 'เข้าฟรี',
+                        hours: 'เปิดตลอดเวลา',
+                        transport: 'สถานี Odori Station ทางออกเชื่อมตรงเข้าสู่สวน',
+                        tip: 'ขึ้นชมทัศนียภาพจาก Sapporo TV Tower ยามค่ำคืน'
+                    }
+                ]
+            },
+            {
+                id: 'fukuoka',
+                name: 'ฟุกุโอกะ (Fukuoka)',
+                region: 'kyushu',
+                temp: '20°C',
+                weather: 'อบอุ่น 🌤️',
+                image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=800',
+                desc: 'ประตูสู่เกาะคิวชู ขึ้นชื่อเรื่องราเมงฮากาตะซุปกระดูกหมู และร้านแผงลอยริมทาง (Yatai)',
+                attractions: [
+                    {
+                        name: 'ศาลเจ้าดาไซฟุ เท็นมังกู (Dazaifu)',
+                        fee: 'เข้าฟรี',
+                        hours: '06:00 - 19:00 น.',
+                        transport: 'นั่งรถไฟ Nishitetsu มาลงสถานี Dazaifu เดิน 5 นาที',
+                        tip: 'ลองชิมขนมโมจิย่าง Umegae Mochi ถนนทางเข้าศาลเจ้า'
+                    }
+                ]
+            },
+            {
+                id: 'nagoya',
+                name: 'นาโกย่า (Nagoya)',
+                region: 'chubu',
+                temp: '18°C',
+                weather: 'แจ่มใส ☀️',
+                image: 'https://images.unsplash.com/photo-1607583449339-ff6d9f7e52b2?q=80&w=800',
+                desc: 'เมืองอุตสาหกรรมและประวัติศาสตร์ ที่ตั้งของปราสาทนาโกย่า และพิพิธภัณฑ์โตโยต้า',
+                attractions: [
+                    {
+                        name: 'ปราสาทนาโกย่า (Nagoya Castle)',
+                        fee: '500 JPY',
+                        hours: '09:00 - 16:30 น.',
+                        transport: 'สถานี Nagoyajo Exit 7 เดิน 5 นาที',
+                        tip: 'เข้าชมพระราชวัง Honmaru Goten ที่บูรณะสถาปัตยกรรมไม้อย่างงดงาม'
+                    }
+                ]
+            },
+            {
+                id: 'hiroshima',
+                name: 'ฮิโรชิม่า (Hiroshima)',
+                region: 'chubu',
+                temp: '19°C',
+                weather: 'มีเมฆบางส่วน ⛅',
+                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=800',
+                desc: 'เมืองแห่งสันติภาพ ศาลเจ้ากลางน้ำมิยาจิมะ และโอโคโนมิยากิสไตล์ฮิโรชิม่า',
+                attractions: [
+                    {
+                        name: 'ศาลเจ้าอิตสึคุชิมะ (Itsukushima Shrine)',
+                        fee: '300 JPY',
+                        hours: '06:30 - 18:00 น.',
+                        transport: 'นั่งเรือเฟอร์รี่จากท่าเรือ Miyajimaguchi 10 นาที',
+                        tip: 'เช็คเวลาน้ำขึ้นน้ำลงเพื่อดูเสาโทริอิกลางน้ำและเดินลงไปถ่ายรูปได้ตอนน้ำลด'
+                    }
+                ]
+            },
+            {
+                id: 'sendai',
+                name: 'เซนได (Sendai)',
+                region: 'chubu',
+                temp: '14°C',
+                weather: 'เย็นสบาย 🍃',
+                image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=800',
+                desc: 'เมืองแห่งต้นไม้ เมืองหลวงแห่งภูมิภาคโทโฮคุ ดินแดนลิ้มลองลิ้นวัวย่างรสเลิศ',
+                attractions: [
+                    {
+                        name: 'ซากปราสาทเซนได (Sendai Castle Ruins)',
+                        fee: 'เข้าชมฟรี',
+                        hours: 'เปิดตลอดเวลา',
+                        transport: 'นั่งรถบัส Loople Sendai ลงป้าย Sendai Castle Site',
+                        tip: 'ถ่ายรูปคู่รูปปั้นท่านซามูไร Date Masamune วิวเมืองเซนได'
+                    }
+                ]
+            },
+            {
+                id: 'nara',
+                name: 'นารา (Nara)',
+                region: 'kansai',
+                temp: '17°C',
+                weather: 'แจ่มใส ☀️',
+                image: 'https://images.unsplash.com/photo-1528164344705-475426879e0d?q=80&w=800',
+                desc: 'เมืองหลวงโบราณ เดินเล่นป้อนขนมเซมเบ้เหล่าน้องกวางน่ารักในสวนนารา',
+                attractions: [
+                    {
+                        name: 'วัดโทไดจิ (Todaiji Temple)',
+                        fee: '600 JPY',
+                        hours: '07:30 - 17:30 น.',
+                        transport: 'สถานี Kintetsu Nara เดิน 20 นาที หรือนั่งรถบัส 5 นาที',
+                        tip: 'ระวังน้องกวางแอบโค้งขอขนมและแย่งกระดาษ/แผนที่ในมือ'
+                    }
+                ]
+            },
+            {
+                id: 'kobe',
+                name: 'โกเบ (Kobe)',
+                region: 'kansai',
+                temp: '18°C',
+                weather: 'แจ่มใส ☀️',
+                image: 'https://images.unsplash.com/photo-1554797589-7241ab691973?q=80&w=800',
+                desc: 'เมืองท่าสไตล์ยุโรป ลิ้มลองเนื้อโกเบระดับพรีเมียม และวิวค่ำคืนสวยติดอันดับ',
+                attractions: [
+                    {
+                        name: 'ย่านคิตาโนะ อิชินกัง (Kitano Ijinkan)',
+                        fee: 'เดินชมฟรี (เข้าบ้านโบราณมีค่าบริการ)',
+                        hours: '09:00 - 18:00 น.',
+                        transport: 'สถานี Sannomiya เดิน 15 นาที',
+                        tip: 'แวะร้าน Starbucks สาขา Kitano ที่ตั้งอยู่ในบ้านสไตล์ยุโรปโบราณ'
+                    }
+                ]
+            },
+            {
+                id: 'yokohama',
+                name: 'โยโกฮาม่า (Yokohama)',
+                region: 'kanto',
+                temp: '18°C',
+                weather: 'แจ่มใส ☀️',
+                image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=800',
+                desc: 'เมืองท่าติดทะเลบรรยากาศชิล ใกล้โตเกียว เด่นด้วยย่านไชน่าทาวน์และ Minato Mirai',
+                attractions: [
+                    {
+                        name: 'พิพิธภัณฑ์ราเมงนิตชิน (Cup Noodles Museum)',
+                        fee: '500 JPY',
+                        hours: '10:00 - 18:00 น.',
+                        transport: 'สถานี Minatomirai เดิน 8 นาที',
+                        tip: 'ทำบะหมี่ถ้วยตกแต่งหน้าตาด้วยตนเองกลับเป็นของฝาก'
+                    }
+                ]
+            },
+            {
+                id: 'kanazawa',
+                name: 'คานาซาวะ (Kanazawa)',
+                region: 'chubu',
+                temp: '15°C',
+                weather: 'มีเมฆมาก ☁️',
+                image: 'https://images.unsplash.com/photo-1616428282387-a2f2320e8b1d?q=80&w=800',
+                desc: 'เมืองขุนนางและทองคำเหลว ชมสวนญี่ปุ่นสวยติด 1 ใน 3 และย่านซามูไรโบราณ',
+                attractions: [
+                    {
+                        name: 'สวนเคนโรคุเอน (Kenrokuen Garden)',
+                        fee: '320 JPY',
+                        hours: '07:00 - 18:00 น.',
+                        transport: 'นั่งรถบัสจากสถานี Kanazawa 15 นาที',
+                        tip: 'ลองชิมไอศกรีมซอฟต์เสิร์ฟปิดแผ่นทองคำแท้ด้านหน้าทางเข้าสวน'
+                    }
+                ]
+            },
+            {
+                id: 'takayama',
+                name: 'ทาคายามะ (Takayama)',
+                region: 'chubu',
+                temp: '13°C',
+                weather: 'อากาศสดชื่น 🏔️',
+                image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=800',
+                desc: 'เมืองเก่ากลางหุบเขาบรรยากาศย้อนยุค ประตูสู่อัลไพน์และหมู่บ้านชิราคาวาโกะ',
+                attractions: [
+                    {
+                        name: 'ย่านเมืองเก่าซันมาชิ ซูจิ (Sanmachi Suji)',
+                        fee: 'เข้าชมฟรี',
+                        hours: '09:00 - 17:00 น.',
+                        transport: 'เดินจากสถานี Takayama 10 นาที',
+                        tip: 'ลองชิมซูชิเนื้อฮิดะ (Hida Beef Sushi) บนแผ่นข้าวเกรียบ'
+                    }
+                ]
+            },
+            {
+                id: 'nagasaki',
+                name: 'นางาซากิ (Nagasaki)',
+                region: 'kyushu',
+                temp: '21°C',
+                weather: 'สดใส ☀️',
+                image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=800',
+                desc: 'เมืองท่าประวัติศาสตร์กลิ่นอายตะวันตก สวนกลอเวอร์ และจุดชมวิวค่ำคืนสวยติดอันดับโลก',
+                attractions: [
+                    {
+                        name: 'สวนกลอเวอร์ (Glover Garden)',
+                        fee: '620 JPY',
+                        hours: '08:00 - 18:00 น.',
+                        transport: 'นั่งรถรางลงป้าย Ouratenshudoshita เดิน 7 นาที',
+                        tip: 'ค้นหาหินรูปหัวใจที่ซ่อนอยู่บนพื้นหินในสวนเพื่อโชคด้านความรัก'
+                    }
+                ]
+            },
+            {
+                id: 'okinawa',
+                name: 'โอกินาวา (Naha/Okinawa)',
+                region: 'okinawa',
+                temp: '26°C',
+                weather: 'แดดจัด ☀️',
+                image: 'https://images.unsplash.com/photo-1540206395-68808572332f?q=80&w=800',
+                desc: 'สวรรค์เขตร้อนของญี่ปุ่น ทะเลสีมรกต วัฒนธรรมริวกิว และพิพิธภัณฑ์สัตว์น้ำระดับโลก',
+                attractions: [
+                    {
+                        name: 'พิพิธภัณฑ์สัตว์น้ำชูราอุมิ (Okinawa Churaumi Aquarium)',
+                        fee: '2,180 JPY',
+                        hours: '08:30 - 18:30 น.',
+                        transport: 'ขับรถยนต์ประมาณ 2 ชั่วโมงจากสนามบิน Naha หรือนั่งสาย Express Bus',
+                        tip: 'ตื่นตาตื่นใจกับแท็งก์ Kuroshio Sea ที่มีฉลามวาฬยักษ์แหวกว่าย'
+                    }
+                ]
+            }
+        ];
+
+        // --- 4. RENDER DESTINATIONS ---
+        function renderCities(data) {
+            const grid = document.getElementById('cityGrid');
+            grid.innerHTML = '';
+
+            if (data.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">ไม่พบสถานที่ท่องเที่ยวที่ตรงกับการค้นหา</div>`;
+                return;
+            }
+
+            data.forEach(city => {
+                let districtBadge = city.districts ? `<span class="bg-sakura-100 text-sakura-700 text-[11px] font-medium px-2.5 py-0.5 rounded-full">${city.districts.length} ย่านหลัก</span>` : '';
+                
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl overflow-hidden border border-sakura-100 hover:border-sakura-300 hover:shadow-lg transition-all duration-300 flex flex-col group";
+                card.innerHTML = `
+                    <div class="relative h-48 overflow-hidden bg-slate-100">
+                        <img src="${city.image}" alt="${city.name}" onerror="handleImgError(this)" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-slate-700 shadow-sm border border-sakura-100">
+                            ${city.weather} ${city.temp}
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-lg font-bold text-slate-800">${city.name}</h3>
+                                ${districtBadge}
+                            </div>
+                            <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">${city.desc}</p>
+                        </div>
+                        <button onclick="openModal('${city.id}')" class="w-full py-2.5 bg-sakura-50 hover:bg-sakura-100 text-sakura-700 text-xs font-semibold rounded-2xl border border-sakura-200 transition-colors flex items-center justify-center space-x-1">
+                            <span>ดูรายละเอียด & สถานที่แนะนำ</span>
+                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- 5. SEARCH & FILTER LOGIC ---
+        function filterRegion(region, event) {
+            document.querySelectorAll('.region-filter').forEach(btn => {
+                btn.className = "region-filter px-4 py-1.5 rounded-full text-xs font-medium bg-white text-slate-600 border border-sakura-100 hover:bg-sakura-50 transition-all";
+            });
+            if (event && event.target) {
+                event.target.className = "region-filter active-region px-4 py-1.5 rounded-full text-xs font-medium bg-lavender-700 text-white shadow-sm transition-all";
+            }
+
+            if (region === 'all') {
+                renderCities(destinations);
+            } else {
+                const filtered = destinations.filter(d => d.region === region);
+                renderCities(filtered);
+            }
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (!query) {
+                renderCities(destinations);
+                return;
+            }
+
+            const filtered = destinations.filter(city => {
+                const matchCity = city.name.toLowerCase().includes(query) || city.desc.toLowerCase().includes(query);
+                const matchDistrict = city.districts && city.districts.some(d => d.name.toLowerCase().includes(query) || d.highlight.toLowerCase().includes(query));
+                const matchAttraction = city.attractions && city.attractions.some(a => a.name.toLowerCase().includes(query));
+                return matchCity || matchDistrict || matchAttraction;
+            });
+
+            renderCities(filtered);
+        }
+
+        // --- 6. DETAIL MODAL ---
+        function openModal(id) {
+            const city = destinations.find(d => d.id === id);
+            if (!city) return;
+
+            let districtsHTML = '';
+            if (city.districts) {
+                districtsHTML = `
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-bold text-slate-800 flex items-center">
+                            <i class="fa-solid fa-map-pin text-sakura-500 mr-2"></i>ย่านสำคัญในโตเกียว (${city.districts.length} ย่าน)
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            ${city.districts.map(d => `
+                                <div class="bg-sakura-50/50 p-3 rounded-2xl border border-sakura-100">
+                                    <div class="text-xs font-bold text-lavender-700">${d.name}</div>
+                                    <div class="text-[11px] text-slate-500">${d.highlight}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            let attractionsHTML = '';
+            if (city.attractions) {
+                attractionsHTML = `
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-bold text-slate-800 flex items-center">
+                            <i class="fa-solid fa-landmark text-sakura-500 mr-2"></i>สถานที่ท่องเที่ยวแนะนำ & การเดินทาง
+                        </h4>
+                        <div class="space-y-3">
+                            ${city.attractions.map(a => `
+                                <div class="p-4 bg-lavender-50/40 rounded-2xl border border-lavender-100 space-y-1.5">
+                                    <div class="text-xs font-bold text-slate-800">${a.name}</div>
+                                    <div class="flex flex-wrap text-[11px] text-slate-600 gap-x-4 gap-y-1">
+                                        <span>🎫 ค่าเข้า: ${a.fee}</span>
+                                        <span>⏰ เวลาเปิด: ${a.hours}</span>
+                                    </div>
+                                    <div class="text-[11px] text-lavender-700 font-medium">
+                                        <i class="fa-solid fa-train-subway mr-1"></i>${a.transport}
+                                    </div>
+                                    ${a.tip ? `<div class="text-[11px] text-sakura-600 italic bg-white/80 p-2 rounded-xl border border-sakura-100 mt-1">💡 Tips: ${a.tip}</div>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="relative h-60">
+                    <img src="${city.image}" onerror="handleImgError(this)" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent flex items-end p-6">
+                        <div class="text-white">
+                            <span class="text-xs px-3 py-1 bg-sakura-500/90 rounded-full font-medium shadow-sm">สภาพอากาศ: ${city.weather} ${city.temp}</span>
+                            <h2 class="text-2xl font-bold mt-2">${city.name}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 space-y-6">
+                    <p class="text-sm text-slate-600 leading-relaxed">${city.desc}</p>
+                    ${districtsHTML}
+                    ${attractionsHTML}
+                </div>
+            `;
+
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailModal') closeModal();
+        });
+
+        // --- 7. TRIP PLANNER DATA & GENERATOR ---
+        const plansData = {
+            3: {
+                title: '3 วัน 2 คืน: ตะลุยไฮไลท์โตเกียวแบบกระชับ',
+                pass: 'Tokyo Subway Ticket (72-hour Pass) ~1,500 JPY',
+                budget: 'ประมาณ 15,000 - 25,000 JPY (ไม่รวมที่พัก/ตั๋วเครื่องบิน)',
+                days: [
+                    { day: 'Day 1', title: 'ย่านคลาสสิก & ช้อปปิ้งชิบูย่า', detail: 'เช้า: ศาลเจ้าเมจิ & ฮาราจูกุ -> บ่าย: เดินเล่นชิบูย่า ชมห้าแยก & จุดชมวิว Shibuya Sky -> เย็น: ทานราเมงและยามค่ำคืนชินจูกุ' },
+                    { day: 'Day 2', title: 'สัมผัสวัฒนธรรม & วิวเมืองยอดฮิต', detail: 'เช้า: วัดเซ็นโซจิ อาซากุสะ -> บ่าย: เดินตลาดอาเมโยโกะ อุเอโนะ -> เย็น: ชมวิวโตเกียวสกายทรี หรือโตเกียวทาวเวอร์' },
+                    { day: 'Day 3', title: 'เมืองอนิเมะ & ช้อปปิ้งเก็บตก', detail: 'เช้า: ย่านอากิฮาบาระ -> บ่าย: ซื้อของฝากย่านกินซ่า เดินทางกลับสนามบินนาริตะ/ฮาเนดะ' }
+                ]
+            },
+            5: {
+                title: '5 วัน 4 คืน: โตเกียว + ชมวิวภูเขาไฟฟูจิ (คาวากูจิโกะ)',
+                pass: 'JR Tokyo Wide Pass (3 วัน) + Tokyo Subway Pass',
+                budget: 'ประมาณ 35,000 - 50,000 JPY',
+                days: [
+                    { day: 'Day 1', title: 'เช็คอินโตเกียว & ตะลุยชิบูย่า', detail: 'เดินทางถึงโตเกียว เช็คอินที่พัก มุ่งหน้าชิบูย่า ช้อปปิ้งและทานปิ้งย่างยามค่ำคืน' },
+                    { day: 'Day 2', title: 'มุ่งสู่ทะเลสาบคาวากูจิโกะ (ฟูจิ)', detail: 'นั่งรถไฟ Express / Highway Bus สู่ Kawaguchiko ขึ้นกระเช้า Mt. Fuji Panoramic Ropeway ปั่นจักรยานรอบทะเลสาบ' },
+                    { day: 'Day 3', title: 'เจดีย์ชูเรโตะ & กลับเข้าโตเกียว', detail: 'ถ่ายรูปไฮไลท์เจดีย์ 5 ชั้นมุมฟูจิที่ Arakurayama Sengen Park บ่ายกลับโตเกียว จิบกาแฟชิลๆ นากาเมกุโระ' },
+                    { day: 'Day 4', title: 'อาซากุสะ & ตะลุยโลกอนิเมะ', detail: 'เที่ยววัดเซ็นโซจิ ถ่ายรูปกิโมโน ลุยย่านอากิฮาบาระและศูนย์การค้า Sunshine City อิเคบุคุโระ' },
+                    { day: 'Day 5', title: 'ตลาดปลาซึคิจิ & ช้อปปิ้งกินซ่า', detail: 'ทานซูชิสดๆ ตลาดปลา Tsukiji Outer Market ช้อปปิ้งส่งท้ายย่าน Ginza ก่อนเดินทางไปสนามบิน' }
+                ]
+            },
+            7: {
+                title: '7 วัน 6 คืน: คันไซสุดคุ้ม (โอซาก้า - เกียวโต - นารา - โกเบ)',
+                pass: 'Kansai Thru Pass / JR Kansai Area Pass',
+                budget: 'ประมาณ 55,000 - 80,000 JPY',
+                days: [
+                    { day: 'Day 1', title: 'แลนดิ้งสนามบินคันไซ & ย่านโดทงโบริ', detail: 'เช็คอินโรงแรมในโอซาก้า ตะลุยทานทาโกยากิ คุชิคาซึ และถ่ายรูปคู่ป้ายกูลิโกะ' },
+                    { day: 'Day 2', title: 'ปราสาทโอซาก้า & วิวเมืองอุเมดะ', detail: 'ชมปราสาทโอซาก้า ขึ้นชมวิวตึก Umeda Sky Building ช่วงเย็นเดินเล่นย่านย้อนยุค Shinsekai' },
+                    { day: 'Day 3', title: 'เที่ยวเกียวโต: วัดคิโยมิซุ & ย่านกิออน', detail: 'เดินทางไปเกียวโต ชมวัดน้ำใส เดินถนนสายกิออน ลุ้นเจอเกอิชา ทานขนมชาเขียวอุจิ' },
+                    { day: 'Day 4', title: 'เสาโทริอิหมื่นต้น & ป่าไผ่อาราชิยามะ', detail: 'เช้าตรู่ศาลเจ้าฟูชิมิ อินาริ ต่อด้วยนั่งรถไฟสายโรแมนติก Sagano และป่าไผ่อาราชิยามะ' },
+                    { day: 'Day 5', title: 'นารา: ป้อนอาหารกวาง & วัดโทไดจิ', detail: 'เดินทางสู่เมืองนารา เดินเล่นป้อนเซมเบ้กวาง สัมผัสความยิ่งใหญ่ของพระโตวัดโทไดจิ' },
+                    { day: 'Day 6', title: 'โกเบ: ชิมเนื้อโกเบ & วิวพอร์ตทาวเวอร์', detail: 'เดินทางสู่เมืองท่าโกเบ ลิ้มรสเนื้อโกเบ A5 เดินเล่นย่าน Kitano และชมวิวอ่าว Kobe Harborland' },
+                    { day: 'Day 7', title: 'ช้อปปิ้ง Rinku Outlet & บินกลับ', detail: 'เก็บตกช้อปปิ้งสินค้าแบรนด์เนมที่ Rinku Premium Outlets ใกล้สนามบินคันไซก่อนบินกลับ' }
+                ]
+            }
+        };
+
+        function selectPlanDuration(days) {
+            document.querySelectorAll('.plan-duration-btn').forEach(btn => {
+                btn.className = "plan-duration-btn p-4 rounded-2xl border-2 border-slate-200 hover:border-sakura-200 text-center transition-all";
+            });
+            const selectedBtn = document.getElementById(`planBtn-${days}`);
+            if (selectedBtn) {
+                selectedBtn.className = "plan-duration-btn active-duration p-4 rounded-2xl border-2 border-sakura-500 bg-sakura-50 text-center transition-all";
+            }
+            renderPlan(days);
+        }
+
+        function renderPlan(days) {
+            const plan = plansData[days];
+            const output = document.getElementById('planOutput');
+
+            let daysHTML = plan.days.map(d => `
+                <div class="flex space-x-3 sm:space-x-4 p-4 rounded-2xl bg-sakura-50/40 border border-sakura-100">
+                    <div class="shrink-0 font-bold text-sakura-700 bg-sakura-100 px-3 py-1 rounded-xl h-fit text-xs">${d.day}</div>
+                    <div class="space-y-1">
+                        <h4 class="text-xs sm:text-sm font-bold text-slate-800">${d.title}</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">${d.detail}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            output.innerHTML = `
+                <div class="p-5 bg-gradient-to-r from-sakura-50 to-lavender-50 rounded-2xl border border-sakura-200 space-y-2">
+                    <h3 class="text-base font-bold text-lavender-700">${plan.title}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-700">
+                        <div>🎟️ <strong>บัตรที่แนะนำ:</strong> ${plan.pass}</div>
+                        <div>💰 <strong>งบเดินทางประมาณ:</strong> ${plan.budget}</div>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="text-sm font-bold text-slate-800">แผนการเดินทางรายวัน:</h4>
+                    ${daysHTML}
+                </div>
+            `;
+        }
+
+        // --- 8. CURRENCY CALCULATOR LOGIC ---
+        function convertCurrency(type) {
+            const jpyInput = document.getElementById('jpyInput');
+            const thbInput = document.getElementById('thbInput');
+            const rateInput = parseFloat(document.getElementById('customRate').value) || 0.245;
+
+            if (type === 'jpy') {
+                const jpyVal = parseFloat(jpyInput.value) || 0;
+                thbInput.value = (jpyVal * rateInput).toFixed(2);
+            } else {
+                const thbVal = parseFloat(thbInput.value) || 0;
+                jpyInput.value = (thbVal / rateInput).toFixed(0);
+            }
+            updateQuickTable(rateInput);
+        }
+
+        function updateQuickTable(rate) {
+            const items = [
+                { jpy: 100, item: 'น้ำเปล่า / ตู้กดอัตโนมัติ' },
+                { jpy: 500, item: 'ข้าวกล่องเซเว่น / Lawson' },
+                { jpy: 1000, item: 'ราเมง 1 ชามใหญ่' },
+                { jpy: 5000, item: 'บุฟเฟต์ชาบู / ปิ้งย่าง' },
+                { jpy: 10000, item: 'ช้อปปิ้งเสื้อผ้า / ของฝาก' }
+            ];
+
+            const tbody = document.getElementById('quickTableBody');
+            tbody.innerHTML = items.map(i => `
+                <tr>
+                    <td class="p-3">¥ ${i.jpy.toLocaleString()}</td>
+                    <td class="p-3 font-semibold text-sakura-600">฿ ${(i.jpy * rate).toFixed(0)}</td>
+                    <td class="p-3 text-slate-400">${i.item}</td>
+                </tr>
+            `).join('');
+        }
+
+        // --- 9. TAB SWITCHING ---
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-5 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap";
+            });
+            const activeTabBtn = document.getElementById(`tab-${tab}`);
+            if (activeTabBtn) {
+                activeTabBtn.className = "tab-btn px-5 py-3 border-b-2 border-sakura-500 text-sakura-600 font-semibold whitespace-nowrap";
+            }
+
+            document.getElementById('view-cities').classList.add('hidden');
+            document.getElementById('view-planner').classList.add('hidden');
+            document.getElementById('view-currency').classList.add('hidden');
+
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+        }
+
+        // Initialize Default State
+        renderCities(destinations);
+        renderPlan(3);
+        convertCurrency('jpy');
+    </script>
+</body>
+</html>
